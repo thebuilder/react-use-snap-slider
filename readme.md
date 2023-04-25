@@ -1,5 +1,21 @@
 # react-use-snap-slider
 
+This is simple React hook for creating a CSS Scroll Snap slider.
+It allows you to create basic sliders with a few lines of code, and gives you full control over the styling.
+
+- Native scrolling and snapping
+- Supports SSR, since all the layout is done in CSS - No JS layout calculations
+- Uses [React IntersectionObserver](https://github.com/thebuilder/react-intersection-observer) to detect when slides are visible
+- MutationObserver to detect when slides are added or removed
+
+It's still early. There are likely to be bugs and missing features.
+
+## Installation
+
+```sh
+npm install react-use-snap-slider
+```
+
 ## Usage
 
 ### `useSnapSlider` hook
@@ -45,6 +61,7 @@ Provide these values as the options argument in the `useSnapSlider` hook:
 | **selector**  | `string`  |         | A CSS selector to use to find the slides inside the root element. If not defined, all children will be used             |
 | **threshold** | `number`  | `0`     | Number between `0` and `1` indicating the percentage of a slide that should be visible, before it's considered visible. |
 | **disabled**  | `boolean` | `false` | Disable the snap slider logic                                                                                           |
+| **loop**      | `boolean` | `true`  | Loop the slides with the `next` and `previous` functions.                                                               |
 
 ### Return values
 

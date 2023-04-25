@@ -1,17 +1,38 @@
 import React from "react";
 import { Inter } from "next/font/google";
 import { useSnapSlider } from "react-use-snap-slider";
-import { ChevronLeft, ChevronRight } from "@/components/icons";
-import clsx from "clsx";
-const inter = Inter({ subsets: ["latin"] });
+import { Dots } from "@/components/dots";
+import { NavButton } from "@/components/nav-button";
+import { twMerge } from "tailwind-merge";
 
-function Slide({ children, ...rest }: { children: React.ReactNode }) {
+const inter = Inter({ subsets: ["latin"] });
+const colors = [
+  "bg-blue-500",
+  "bg-green-500",
+  "bg-yellow-500",
+  "bg-red-500",
+  "bg-purple-500",
+  "bg-pink-500",
+  "bg-indigo-500",
+  "bg-gray-500",
+];
+
+function Slide({
+  children,
+  className,
+  ...rest
+}: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div
+      className={twMerge(
+        "flex-none basis-full snap-start p-4 h-48 bg-blue-600",
+        className
+      )}
       {...rest}
-      className="flex-none basis-full snap-start p-4 h-48 bg-blue-600"
     >
-      {children}
+      <div className="text-xl select-none grid place-content-center place-items-center h-full">
+        {children}
+      </div>
     </div>
   );
 }
@@ -19,7 +40,6 @@ function Slide({ children, ...rest }: { children: React.ReactNode }) {
 function Slider({ children }: { children: React.ReactNode }) {
   const { ref, next, previous, snapTo, activeIndex, totalSlides } =
     useSnapSlider();
-  const dots = Array.from({ length: totalSlides });
 
   return (
     <div className="relative">
@@ -30,52 +50,45 @@ function Slider({ children }: { children: React.ReactNode }) {
         {children}
       </div>
       <div className="flex justify-between items-center py-4">
-        <button
-          onClick={previous}
-          aria-label="Previous slide"
-          className="hover:bg-purple-800 focus:bg-purple-800 rounded-full p-2"
-        >
-          <ChevronLeft />
-        </button>
-        <div className="flex justify-center gap-x-2">
-          {/*{activeIndex + 1} / {totalSlides}*/}
-          {dots.map((_, index) => (
-            <button
-              key={index}
-              className={clsx(
-                " w-4 h-4 rounded-full hover:bg-purple-200 focus:bg-purple-200",
-                activeIndex === index ? "bg-white" : 'bg-white/40'
-              )}
-              onClick={() => snapTo(index)}
-            />
-          ))}
-        </div>
-        <button
-          onClick={next}
-          aria-label="Next slide"
-          className="hover:bg-purple-800 focus:bg-purple-800 rounded-full p-2"
-        >
-          <ChevronRight />
-        </button>
+        <NavButton direction="previous" onClick={previous} />
+        <Dots
+          activeIndex={activeIndex}
+          totalSlides={totalSlides}
+          snapTo={snapTo}
+        />
+        <NavButton direction="next" onClick={next} />
       </div>
     </div>
   );
 }
 
 export default function Home() {
+  const [slides, setSlides] = React.useState(4);
+
   return (
     <main className={`min-h-screen p-24 ${inter.className}`}>
       <h1 className="font-mono text-6xl font-bold text-center mb-8">
         react-use-snap-slider
       </h1>
-      <div className="">
-        <Slider>
-          <Slide>Slide 1</Slide>
-          <Slide>Slide 2</Slide>
-          <Slide>Slide 3</Slide>
-          <Slide>Slide 4</Slide>
-          <Slide>Slide 5</Slide>
-        </Slider>
+      {!slides ? <p className="text-lg">No slides to show 😱</p> : null}
+      <Slider>
+        {Array.from({ length: slides }).map((_, index) => (
+          <Slide key={index} className={colors[index % colors.length]}>
+            Slide {index + 1}
+          </Slide>
+        ))}
+      </Slider>
+      <div className="flex gap-x-4">
+        <button
+          onClick={() =>
+            setSlides((current) => (current > 0 ? current - 1 : 0))
+          }
+        >
+          Remove slide
+        </button>
+        <button onClick={() => setSlides((current) => current + 1)}>
+          Add slide
+        </button>
       </div>
     </main>
   );

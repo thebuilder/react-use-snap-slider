@@ -9,6 +9,9 @@ type SnapOptions = {
   threshold?: number;
   /** A CSS selector to use to find the slides inside the root element. If not defined, all children will be used. */
   selector?: string;
+  /** Whether to loop the slider when clicking next, previous at the edges.
+   * If `false`, the `next()` and `previous()` functions will do nothing in those cases. */
+  loop?: boolean;
 };
 
 type SnapResult = {
@@ -44,6 +47,7 @@ export function useSnapSlider({
   disabled,
   threshold = 0.5,
   selector,
+  loop = true,
 }: SnapOptions = {}): SnapResult {
   const slidesRef = useRef<Element[]>();
   const [rootRef, setRootRef] = useState<HTMLElement | null>(null);
@@ -60,33 +64,64 @@ export function useSnapSlider({
 
   useEffect(() => {
     if (rootRef && !disabled) {
-      const sliders = Array.from<Element>(
-        selector ? rootRef.querySelectorAll(selector) : rootRef.children
-      );
-      slidesRef.current = sliders;
+      let mutation: MutationObserver | undefined;
+      let observers: Array<() => void>;
 
-      // Set the initial state
-      setVisibleSlides(sliders.map((_, index) => index === 0));
+      if (typeof MutationObserver !== "undefined") {
+        mutation = new MutationObserver(() => updateSlides());
 
-      const observers = sliders.map((slider, index) => {
-        // Use an IntersectionObserver to determine if a slide is visible
-        return observe(
-          slider,
-          (inView) => {
-            // Update the visible state of the slide, once the observer fires
-            setVisibleSlides((prev) => {
-              if (prev[index] === inView) return prev;
-              const newState = [...prev];
-              newState[index] = inView;
-              return newState;
-            });
-          },
-          { threshold }
+        mutation.observe(rootRef, {
+          childList: true,
+          // We need to observe the subtree, because we don't know if the slides are direct children
+          // of the root element once the user sets a `selector`
+          subtree: !!selector,
+        });
+      }
+
+      const updateSlides = () => {
+        const sliders = Array.from<Element>(
+          selector ? rootRef.querySelectorAll(selector) : rootRef.children
         );
-      });
+
+        setVisibleSlides((current) => {
+          // If the number of slides has changed, we need to reset the visible state
+          // If there is an active slide, we want to keep that active
+          let activeIndex = current.findIndex((active) => active);
+          if (activeIndex === -1) activeIndex = 0;
+
+          return sliders.map((_, index) => index === activeIndex);
+        });
+
+        slidesRef.current = sliders;
+
+        // Set the initial state
+
+        // Destroy any existing observers
+        if (observers) observers.forEach((destroy) => destroy());
+        observers = sliders.map((slider, index) => {
+          // Use an IntersectionObserver to determine if a slide is visible
+          return observe(
+            slider,
+            (inView) => {
+              // Update the visible state of the slide, once the observer fires
+              setVisibleSlides((prev) => {
+                if (prev[index] === inView) return prev;
+                const newState = [...prev];
+                newState[index] = inView;
+                return newState;
+              });
+            },
+            { threshold }
+          );
+        });
+      };
+
+      // Register the current slides
+      updateSlides();
 
       return () => {
-        observers.forEach((destroy) => destroy());
+        if (observers) observers.forEach((destroy) => destroy());
+        if (mutation) mutation.disconnect();
       };
     }
   }, [rootRef, disabled, threshold, selector]);
@@ -105,12 +140,14 @@ export function useSnapSlider({
   }, []);
 
   const next = useCallback(() => {
+    if (!loop && activeIndex.current === slidesRef.current?.length - 1) return;
     snapTo(activeIndex.current + 1);
-  }, [snapTo]);
+  }, [snapTo, loop]);
 
   const previous = useCallback(() => {
+    if (!loop && activeIndex.current === 0) return;
     snapTo(activeIndex.current - 1);
-  }, [snapTo]);
+  }, [snapTo, loop]);
 
   return {
     activeIndex: activeIndex.current,
