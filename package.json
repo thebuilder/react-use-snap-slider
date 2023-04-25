@@ -1,0 +1,44 @@
+{
+  "name": "react-snap-slider",
+  "version": "0.1.0",
+  "description": "A React hook that allows you to control a CSS `scroll-snap` slider.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts",
+    "prepublish": "tsup src/index.ts",
+    "dev": "tsup src/index.ts --watch",
+    "dev:website": "turbo run dev --filter=website..."
+  },
+  "keywords": [
+    "react",
+    "react-hook",
+    "scroll-snap",
+    "slider",
+    "carousel",
+    "use-scroll-snap",
+    "use-snap-slider",
+    "react-scroll-snap-slider"
+  ],
+  "author": "Daniel Schmidt",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thebuilder/react-snap-slider.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "react-intersection-observer": "^9.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.8",
+    "react": "^18.2.0",
+    "tsup": "^6.7.0",
+    "turbo": "^1.9.3",
+    "typescript": "^5.0.4"
+  }
+}
