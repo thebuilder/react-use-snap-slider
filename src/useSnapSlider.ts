@@ -11,6 +11,21 @@ type SnapOptions = {
   selector?: string;
 };
 
+type SnapResult = {
+  /** The index of the active slide */
+  activeIndex: number;
+  /** The total number of slides */
+  totalSlides: number;
+  /** A function that allows you to snap to a specific slide */
+  snapTo: (index: number) => void;
+  /** A function that allows you to snap to the next slide */
+  next: () => void;
+  /** A function that allows you to snap to the previous slide */
+  previous: () => void;
+  /** A ref that you should attach to the root element */
+  ref: (element: HTMLElement | null) => void;
+};
+
 /***
  * A hook that allows you to control a CSS `scroll-snap` slider.
  *
@@ -18,7 +33,7 @@ type SnapOptions = {
  *
  * ```tsx
  * const { ref, activeIndex, totalSlides, snapTo, next, previous } = useSnapSlider();
- * <div ref={ref} className="snap-x snap-mandatory overflow-x-scroll scrollbar-hide">
+ * <div ref={ref} className="flex snap-x snap-mandatory overflow-x-scroll scrollbar-hide">
  *   <div className="flex-none basis-full snap-start">Slide 1</div>
  *   <div className="flex-none basis-full snap-start">Slide 2</div>
  *   <div className="flex-none basis-full snap-start">Slide 3</div>
@@ -29,7 +44,7 @@ export function useSnapSlider({
   disabled,
   threshold = 0.5,
   selector,
-}: SnapOptions = {}) {
+}: SnapOptions = {}): SnapResult {
   const slidesRef = useRef<Element[]>();
   const [rootRef, setRootRef] = useState<HTMLElement | null>(null);
   const [visibleSlides, setVisibleSlides] = useState<Array<boolean>>([]);

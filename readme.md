@@ -18,7 +18,7 @@ function App() {
     <div>
       <div
         ref={ref}
-        className="snap-x snap-mandatory overflow-x-scroll scrollbar-hide"
+        className="flex snap-x snap-mandatory overflow-x-scroll scrollbar-hide"
       >
         <div className="flex-none basis-full snap-start">Slide 1</div>
         <div className="flex-none basis-full snap-start">Slide 2</div>
@@ -74,7 +74,7 @@ The important parts are:
 - `flex-none basis-full` on each slide. This makes the slides take up the full width of the container.
 
 ```html
-<div class="snap-x snap-mandatory overflow-x-scroll">
+<div class="flex snap-x snap-mandatory overflow-x-scroll">
   <div class="flex-none basis-full snap-start">Slide 1</div>
   <div class="flex-none basis-full snap-start">Slide 2</div>
   <div class="flex-none basis-full snap-start">Slide 3</div>

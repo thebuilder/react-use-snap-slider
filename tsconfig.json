@@ -3,6 +3,7 @@
     "jsx": "react",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "noEmit": true,
     "lib": ["es2015", "dom"]
   }
 }
