@@ -1,6 +1,6 @@
 {
   "name": "react-use-snap-slider",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A headless React hook that allows you to control a CSS `scroll-snap` slider.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
