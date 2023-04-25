@@ -1,4 +1,4 @@
-# react-snap-slider
+# react-use-snap-slider
 
 ## Usage
 
