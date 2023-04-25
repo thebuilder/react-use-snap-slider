@@ -42,7 +42,7 @@ Provide these values as the options argument in the `useSnapSlider` hook:
 
 | Name          | Type      | Default | Description                                                                                                             |
 | ------------- | --------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
-| **selector**  | `string`  | `'0px'` | A CSS selector to use to find the slides inside the root element. If not defined, all children will be used             |
+| **selector**  | `string`  |         | A CSS selector to use to find the slides inside the root element. If not defined, all children will be used             |
 | **threshold** | `number`  | `0`     | Number between `0` and `1` indicating the percentage of a slide that should be visible, before it's considered visible. |
 | **disabled**  | `boolean` | `false` | Disable the snap slider logic                                                                                           |
 

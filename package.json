@@ -1,15 +1,16 @@
 {
   "name": "react-use-snap-slider",
   "version": "0.1.1",
-  "description": "A React hook that allows you to control a CSS `scroll-snap` slider.",
+  "description": "A headless React hook that allows you to control a CSS `scroll-snap` slider.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts",
     "prepublish": "tsup src/index.ts",
-    "dev": "tsup src/index.ts --watch",
-    "dev:website": "turbo run dev --filter=website..."
+    "dev": "run-p dev:*",
+    "dev:lib": "tsup src/index.ts --watch",
+    "dev:website": "pnpm --filter=website run dev"
   },
   "files": [
     "dist"
@@ -24,6 +25,7 @@
     "react",
     "react-hook",
     "scroll-snap",
+    "headless",
     "slider",
     "carousel",
     "use-scroll-snap",
@@ -38,10 +40,10 @@
     "react": "^18.0.0"
   },
   "devDependencies": {
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "tsup": "^6.7.0",
-    "turbo": "^1.9.3",
     "typescript": "^5.0.4"
   }
 }
