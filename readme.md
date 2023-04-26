@@ -43,8 +43,8 @@ function App() {
       <p>
         Slide {activeIndex + 1} / {totalSlides}
       </p>
-      <button>Previous</button>
-      <button>Next</button>
+      <button onClick={previous}>Previous</button>
+      <button onClick={next}>Next</button>
     </div>
   );
 }
